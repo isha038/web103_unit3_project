@@ -4,7 +4,8 @@ import favicon from 'serve-favicon'
 import dotenv from 'dotenv'
 
 // import the router from your routes file
-
+import eventsRoutes from './routes/eventsRoutes.js';
+import locationsRoutes from './routes/LocationsRoutes.js';
 
 dotenv.config()
 
@@ -13,6 +14,13 @@ const PORT = process.env.PORT || 3000
 const app = express()
 
 app.use(express.json())
+app.get('/', (req, res) => {
+    res.send('Welcome to the Virtual Community Space API!');
+  });
+// Use the routes
+app.use('/api', eventsRoutes);
+app.use('/api', locationsRoutes);
+
 
 if (process.env.NODE_ENV === 'development') {
     app.use(favicon(path.resolve('../', 'client', 'public', 'party.png')))
