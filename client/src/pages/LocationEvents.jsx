@@ -1,11 +1,44 @@
 import React, { useState, useEffect } from 'react'
 import Event from '../components/Event'
+import { getLocationById } from '../services/LocationsAPI';
+import { getEventsByLocationId } from '../services/EventsAPI';
+import { useParams } from 'react-router-dom';
 import '../css/LocationEvents.css'
 
 const LocationEvents = ({index}) => {
+
+    const { locationId } = useParams();
     const [location, setLocation] = useState([])
     const [events, setEvents] = useState([])
 
+    useEffect(() => {
+        // Fetch location by ID
+        if (locationId){
+        const fetchLocation = async () => {
+            try {
+                const locationData = await getLocationById(locationId);
+                setLocation(locationData);
+            } catch (error) {
+                console.error('Error fetching location:', error);
+            }
+        };
+
+        // Fetch events by location ID
+        const fetchEvents = async () => {
+            try {
+                const eventsData = await getEventsByLocationId(locationId);
+                setEvents(eventsData);
+            } catch (error) {
+                console.error('Error fetching events:', error);
+            }
+        };
+
+        fetchLocation();
+        fetchEvents();
+    }
+    }, [locationId]);
+
+    if (!location) return <p>Loading...</p>;
     return (
         <div className='location-events'>
             <header>
